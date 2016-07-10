@@ -3,26 +3,32 @@ source 'https://rubygems.org'
 
 gem 'rails', '~> 5.0.0'
 
-gem 'rails-api'
+gem 'puma'
+gem 'mysql2'
 
-gem 'spring', :group => :development
+gem 'capybara'
+gem 'slim-rails'
 
+# 画像操作用
+gem 'carrierwave'
+gem 'rmagick'
 
-gem 'sqlite3'
+# cache
+gem 'redis'
+gem "redis-rails", github: 'redis-store/redis-rails', branch: 'master'
+gem 'redis-store', github: 'redis-store/redis-store', branch: 'master'
 
+group :development do
+  gem 'spring'
+  gem 'listen'
+end
 
+group :test do
+  gem 'rspec'
+  gem 'rspec-rails'
+  gem "factory_girl_rails"
+end
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt', '~> 3.1.7'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the app server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano', :group => :development
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+group :development, :test do
+  gem 'pry'
+end
