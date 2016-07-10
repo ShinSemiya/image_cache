@@ -19,10 +19,13 @@ describe 'Items', type: :request do
         expect(response).to be_success
         expect(response.content_type).to eq('image/png')
         expect(response.headers["Content-Disposition"]).to eq("inline; filename=\"#{item.name}\"")
-        expect(response.body).to eq(base64_image_param(item.image.path))
+        expect(response.body).to eq(base64_image_param(item.image.path, item.image.content_type))
       end
 
-      it 'Image is cached'
+      it 'Image is cached' do
+        cached_item = Rails.cache.read(item.cache_key)
+        expect(cached_item).to eq(base64_image_param(item.image.path, item.image.content_type))
+      end
     end
   end
 
