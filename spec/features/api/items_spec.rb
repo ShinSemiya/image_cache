@@ -22,7 +22,10 @@ describe 'Items', type: :request do
         expect(response.body).to eq(base64_image_param(item.image.path, item.image.content_type))
       end
 
-      it 'Image is cached'
+      it 'Image is cached' do
+        cached_item = Rails.cache.read(item.cache_key)
+        expect(cached_item).to eq(base64_image_param(item.image.path, item.image.content_type))
+      end
     end
   end
 
