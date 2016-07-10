@@ -104,7 +104,8 @@ describe 'Items', type: :request do
     let(:image_file_first)  { fixture_file_upload('images/test.png', 'image/png') }
     let(:image_file_update) { fixture_file_upload('images/test_1.png', 'image/png') }
 
-    let(:upload_params) { { name: 'update_test', image: image_file_first } }
+    let(:item_name) { 'update_test' }
+    let(:upload_params) { { name: item_name, image: image_file_first } }
     let(:update_params) { { image: image_file_update } }
 
     before do
@@ -112,7 +113,7 @@ describe 'Items', type: :request do
     end
 
     it 'Image is updated' do
-      item = Item.last
+      item = Item.find_by(name: item_name)
       image_url = item.image.url
 
       post "/api/items/#{item.id}/update_image", update_params, post_env
