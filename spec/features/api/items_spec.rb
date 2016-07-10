@@ -85,6 +85,19 @@ describe 'Items', type: :request do
       expect(response).to be_success
       expect(Item.where(name: item_name).exists?).to be true
     end
+
+    context 'File has invalid extension' do
+      let(:invalid_file) { fixture_file_upload('images/test.txt', 'text/plain') }
+      let(:params) { { name: item_name, image: invalid_file } }
+
+      before do
+        post '/api/items/upload', params, post_env
+      end
+
+      it 'Return status of unprocessable_entity' do
+        expect(response.status).to eq 422
+      end
+    end
   end
 
   describe 'Post #update_image' do
