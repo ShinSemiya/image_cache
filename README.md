@@ -1,10 +1,12 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
-
-Things you may want to cover:
-
+このリポジトリはキャッシュとしてRedisを使った画像APIです。  
+ファイルアップローダのように機能します。  
+キャッシュを使ったシステムをして使うためにRailsを用いて簡単なAPIを実装しました。  
+キャッシュを使う都合上、Redisサーバーの起動がdevelopmentやtestにおいても必要です。  
+  
+また、ローカルでの起動しか想定していません。    
+  
 * Ruby version  
 2.3.1 を使っています。  
 Railsは5以降を想定しています。  
