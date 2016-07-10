@@ -1,0 +1,56 @@
+==================================================
+
+To get a sense of your problem-solving skills, we’d like to ask you to build a thread-safe, in-memory LRU cache with a maximum item count of 10. You can do this in C,C++,Ruby,Objective-C,Swift,Go,PHP,JavaScript
+Design priorities should be:
+1. Should perform well as a web image cache, (avg ~1MB)
+2. Should be well tested
+3. Simplicity of API
+4. Overall performance
+5. Thread safety
+
+開発の目安は8時間。
+GitHubで公開してコメントのやりとりができるようにしてください。
+
+=================================
+
+# 実装について
+
+Ruby+Railsで実装しました。
+Railsはrails-apiを使っています。
+簡単なAPIとして実装しました。
+ファイル操作にはcarrierwaveを使っています。
+
+画像はbase64エンコードしたものを落としてくる形です。
+ セキュリティ面はともかくとして、base64ではなく生で落とすということも考えましたがテストしやすさからbase64にしました。
+
+# キャッシュについて
+キャッシュにはRedisを使いました。
+10件かつ(avg ~1MB)ということで、10 * 1MB = 10MB
+ バックアップが走る場合も考えてその２倍の20MBを確保しています。
+LRU形式ということで maxmemory-policy は allkeys-lru を使っています。
+base64でエンコードしてキャッシュしています。
+Redisの設定ファイルは ./redis.conf にあります
+
+specはfeature以下にテストを書いています。
+スレッドセーフはRails側に頼っていますが大丈夫という認識です。
+
+更新時に消すとRedisのslaveがあった場合同期が面倒なので、古いものは残しています。
+ LRUなのでそのうち自然に消えるに任せるという考えです。
+
+# APIについて
+## api/upload
+name:  (必須)画像のファイル名です
+image: (必須)画像ファイル本体です。
+画像のアップロードを行います。
+扱える画像の拡張子は jpg jpeg gif png のみです。
+
+## api/:id/update_image
+id:    (必須)画像のidです。
+image: (必須)画像ファイル本体です。
+画像のアップロードを行います。
+扱える画像の拡張子は uploadに準じます。
+
+## api/:id
+id:    (必須)画像のidです。
+画像のダウンロードを行います。
+base64エンコードしたものが落ちてくるため、クライアント側で解凍が必要です。
