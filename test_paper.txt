@@ -1,0 +1,14 @@
+==================================================
+
+To get a sense of your problem-solving skills, we’d like to ask you to build a thread-safe, in-memory LRU cache with a maximum item count of 10. You can do this in C,C++,Ruby,Objective-C,Swift,Go,PHP,JavaScript
+Design priorities should be:
+1. Should perform well as a web image cache, (avg ~1MB)
+2. Should be well tested
+3. Simplicity of API
+4. Overall performance
+5. Thread safety
+
+開発の目安は8時間。
+GitHubで公開してコメントのやりとりができるようにしてください。
+
+=================================
