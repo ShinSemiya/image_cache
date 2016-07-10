@@ -1,9 +1,30 @@
 require 'rails_helper'
 
 describe 'Items', type: :request do
+  include RequestHelper
   include ActionDispatch::TestProcess
-  let(:post_env) { { 'accept' => 'application/json', 'Content-Type' => 'multipart/form-data', } }
   let(:test_image_file_path) { 'spec/factories/images/test.png' }
+
+  describe 'Get #show' do
+    let(:image_file_path) { 'images/test.png' }
+    let(:image) { fixture_file_upload(image_file_path, 'image/png') }
+    let(:item) { create(:item, image: image) }
+
+    context 'when image is NOT cached' do
+      before do
+        get "/api/items/#{item.id}"
+      end
+
+      it 'return file image' do
+        expect(response).to be_success
+        expect(response.content_type).to eq('image/png')
+        expect(response.headers["Content-Disposition"]).to eq("inline; filename=\"#{item.name}\"")
+        expect(response.body).to eq(base64_image_param(item.image.path))
+      end
+
+      it 'Image is cached'
+    end
+  end
 
   describe 'Post #upload' do
     let(:item_name) { 'test_hogehoge' }

@@ -15,6 +15,14 @@ class Api::ItemsController < ApplicationController
   end
 
   def show
+    item_image = @item.image_with_cache
+
+    send_data(
+      item_image,
+      type: @item.image.content_type,
+      filename: @item.name,
+      disposition: 'inline'
+    )
   end
 
   private

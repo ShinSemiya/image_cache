@@ -18,6 +18,11 @@
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 require 'factory_girl_rails'
 
+Dir[File.dirname(__FILE__) + "/support/*.rb"].each {|f| require f }
+FactoryGirl::SyntaxRunner.class_eval do
+  include ActionDispatch::TestProcess
+end
+
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
 
