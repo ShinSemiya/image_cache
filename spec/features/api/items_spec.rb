@@ -27,6 +27,7 @@ describe 'Items', type: :request do
         expect(cached_item).to eq(base64_image_param(item.image.path, item.image.content_type))
       end
     end
+
   end
 
   describe 'Post #upload' do
@@ -41,6 +42,27 @@ describe 'Items', type: :request do
     it 'Upload is successful' do
       expect(response).to be_success
       expect(Item.where(name: item_name).exists?).to be true
+    end
+  end
+
+  describe 'Post #update_image' do
+    let(:image_file_first)  { fixture_file_upload('images/test.png', 'image/png') }
+    let(:image_file_update) { fixture_file_upload('images/test_1.png', 'image/png') }
+
+    let(:upload_params) { { name: 'update_test', image: image_file_first } }
+    let(:update_params) { { image: image_file_update } }
+
+    before do
+      post '/api/items/upload', upload_params, post_env
+    end
+
+    it 'Image is updated' do
+      item = Item.last
+      image_url = item.image.url
+
+      post "/api/items/#{item.id}/update_image", update_params, post_env
+      expect(response).to be_success
+      expect(image_url).not_to eq item.reload.image.url
     end
   end
 end
