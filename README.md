@@ -14,7 +14,7 @@ Railsは5以降を想定しています。
 * System dependencies  
 Ruby on Rails + MySQL + Redis + Carrierwave を使っています。  
 あらかじめ導入をお願いします。  
-Redisの設定ファイルは redis-conf/redis.conf にあります  
+Redisの設定ファイルは redis.conf にあります
 
 * Database creation  
 rake db:create  
