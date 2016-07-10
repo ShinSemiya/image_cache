@@ -28,6 +28,48 @@ describe 'Items', type: :request do
       end
     end
 
+    context 'when image is cached' do
+      let(:image_for_update) { fixture_file_upload('images/test_1.png', 'image/png') }
+      let(:update_params) { { image: image_for_update } }
+
+      before do
+        Rails.cache.clear
+        get "/api/items/#{item.id}"
+      end
+
+      it 'update cache after read' do
+        image_cache_key = item.cache_key
+        expect(Rails.cache.data.keys).to eq ([image_cache_key])
+        expect(response).to be_success
+
+        base64_before_update = base64_image_param(item.image.path, item.image.content_type)
+
+        post "/api/items/#{item.id}/update_image", update_params, post_env
+        expect(response).to be_success
+        expect(Rails.cache.data.keys).to eq ([image_cache_key])
+
+        get "/api/items/#{item.id}"
+        expect(response).to be_success
+
+        cached_item = Rails.cache.read(image_cache_key)
+        expect(cached_item).to eq(base64_before_update)
+
+        updated_image_cache_key = item.reload.cache_key
+        reloaded_cached_item = Rails.cache.read(updated_image_cache_key)
+        expect(reloaded_cached_item).to eq(base64_image_param(item.reload.image.path, item.reload.image.content_type))
+      end
+
+      context 'when image-file is deleted' do
+        it 'read from cache' do
+          encoded_image = base64_image_param(item.image.path, item.image.content_type)
+          item.image.remove!
+
+          get "/api/items/#{item.id}"
+          expect(response).to be_success
+          expect(response.body).to eq(encoded_image) # read from cache
+        end
+      end
+    end
   end
 
   describe 'Post #upload' do

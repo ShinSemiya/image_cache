@@ -5,4 +5,8 @@ class Item < ApplicationRecord
   def image_with_cache
     ItemCache::item_image_cache(cache_key, image.path, image.content_type)
   end
+
+  def cache_key
+    image.url
+  end
 end
