@@ -4,6 +4,9 @@ Rails.application.routes.draw do
       collection do
         post :upload
       end
+      member do
+        post :update_image
+      end
     end
   end
 end
